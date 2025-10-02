@@ -162,3 +162,9 @@ Feel free to submit issues and enhancement requests!
 **⭐ Star this repo if you found it helpful!**
 
 *Happy automating! 🎉*
+
+## How to see your configuration in docker
+
+https://github.com/user-attachments/assets/fdcb2961-e03e-4977-83f5-eb0df9ca6290
+
+
