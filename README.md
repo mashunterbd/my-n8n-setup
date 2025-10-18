@@ -76,9 +76,9 @@ Create a `Dockerfile` file in your project directory:
 ```yaml
 FROM n8nio/n8n:latest
 
-# Install Python3, pip, curl, and yt-dlp bash nano 
+# Install Python3, pip, curl, and yt-dlp
 USER root
-RUN apk add --no-cache python3 py3-pip curl yt-dlp nano 
+RUN apk add --update python3 py3-pip curl yt-dlp nano bash
 
 # Install pipx for Node user
 USER node
