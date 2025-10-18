@@ -95,6 +95,46 @@ ENV PATH="/home/node/.local/bin:$PATH"
 docker build -t n8n-vscode .
 ```
 
+### Now Restart Docker 
+```
+docker compose down
+```
+### Update  `docker-compose.yml` file in your project directory:
+
+```yaml
+services:
+  n8n:
+    image: n8n-vscode 
+    container_name: n8n-vscode
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_EDITOR_BASE_URL=http://localhost:5678
+      - N8N_WEBHOOK_URL=http://localhost:5678/
+      - N8N_SECURE_COOKIE=false
+      - N8N_DEFAULT_BINARY_DATA_MODE=filesystem
+      - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_LOG_LEVEL=debug
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
+      - EXECUTIONS_PROCESS=main
+      - EXECUTIONS_DATA_SAVE_ON_ERROR=all
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none
+      - N8N_METRICS=true
+    # Timezone settings for Bangladesh
+      - TZ=Asia/Dhaka
+      - GENERIC_TIMEZONE=Asia/Dhaka
+    volumes:
+      - n8n_storage:/home/node/.n8n
+      - ./shared-data:/shared
+      - /mnt/data:/mnt/data
+
+volumes:
+  n8n_storage:
+    driver: local
+```
+
 ### Step 5: Launch N8N
 Open VS Code terminal in your project directory and run:
 
@@ -133,7 +173,8 @@ ports:
 ```
 docker-n8n/
 ├── docker-compose.yml
-└── README.md
+└── Dockerfile
+
 ```
 
 ## 🚀 What is N8N?
