@@ -70,6 +70,26 @@ volumes:
     driver: local
 ```
 
+### Then, Dockerfile Configuration
+Create a `Dockerfile` file in your project directory:
+
+```yaml
+FROM n8nio/n8n:latest
+
+# Install Python3, pip, curl, and yt-dlp
+USER root
+RUN apk add --no-cache python3 py3-pip curl yt-dlp nano 
+
+# Install pipx for Node user
+USER node
+RUN python3 -m pip install --user --break-system-packages pipx
+
+# Add pipx binary path to PATH
+ENV PATH="/home/node/.local/bin:$PATH"
+```
+# add more apk name here : USER root
+**RUN apk add --no-cache python3 py3-pip curl yt-dlp nano**
+
 ### Step 5: Launch N8N
 Open VS Code terminal in your project directory and run:
 
