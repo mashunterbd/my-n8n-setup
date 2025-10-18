@@ -90,6 +90,11 @@ ENV PATH="/home/node/.local/bin:$PATH"
 # add more apk name here : USER root
 **RUN apk add --no-cache python3 py3-pip curl yt-dlp nano**
 
+### Build 
+```
+docker build -t n8n-vscode .
+```
+
 ### Step 5: Launch N8N
 Open VS Code terminal in your project directory and run:
 
