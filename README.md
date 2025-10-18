@@ -76,7 +76,7 @@ Create a `Dockerfile` file in your project directory:
 ```yaml
 FROM n8nio/n8n:latest
 
-# Install Python3, pip, curl, and yt-dlp
+# Install Python3, pip, curl, and yt-dlp bash nano 
 USER root
 RUN apk add --no-cache python3 py3-pip curl yt-dlp nano 
 
