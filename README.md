@@ -234,3 +234,118 @@ Feel free to submit issues and enhancement requests!
 https://github.com/user-attachments/assets/fdcb2961-e03e-4977-83f5-eb0df9ca6290
 
 
+
+
+# n8n Localhost URL Issue and Resolution
+
+## Problem Overview
+
+When setting up **n8n** with Docker, you may encounter the following situation:
+
+* `http://127.0.0.1:5678/` works perfectly.
+* `http://localhost:5678/` does **not** work.
+
+<img width="1919" height="950" alt="Screenshot 2025-10-26 235207" src="https://github.com/user-attachments/assets/e3c7b34c-ce4b-4b1c-8425-43ab723e7955" />
+<img width="1919" height="1007" alt="Screenshot 2025-10-26 221509" src="https://github.com/user-attachments/assets/c4ec9098-c38b-46d4-82d5-4bf767fb3371" />
+<img width="1797" height="1015" alt="Screenshot 2025-10-26 202004" src="https://github.com/user-attachments/assets/b786e5c3-c669-4e32-98fc-56fce2d431c3" />
+<img width="987" height="222" alt="Screenshot 2025-10-26 201557" src="https://github.com/user-attachments/assets/581f9359-ceb3-4ddc-a2c1-c01d2564f4f1" />
+<img width="1460" height="914" alt="Screenshot 2025-10-26 201154" src="https://github.com/user-attachments/assets/035a5fdc-a8ef-454a-b556-0bcc8c19bec1" />
+
+
+This can cause problems in scenarios where certain integrations or APIs (e.g., Google APIs) require exact URL matches for authorization. If the URL does not match the expected authorization URL, the API calls will fail.
+
+---
+
+## Cause
+
+The problem usually occurs due to **hostname resolution issues** on your system. In Windows, the `localhost` mapping may not resolve correctly if there are conflicting entries in the `hosts` file or if Docker modifies network behavior.
+
+For example, a problematic `hosts` file may look like this:
+
+```
+# localhost name resolution is handled within DNS itself.
+# 127.0.0.1       localhost
+# ::1             localhost
+```
+
+In some cases, restarting the PC resolves the issue because it refreshes network and DNS settings.
+
+---
+
+## Step-by-Step Solution
+
+1. **Check the `hosts` file**
+
+   On Windows, open:
+
+   ```
+   %SystemRoot%\System32\drivers\etc\hosts
+   ```
+
+   Ensure that the following entry exists and is **uncommented**:
+
+   ```
+   127.0.0.1       localhost
+   ```
+
+2. **Restart your PC**
+
+   After updating the `hosts` file, restart your computer to apply changes.
+
+3. **Verify**
+
+   * Open a browser and visit:
+
+     ```
+     http://localhost:5678/
+     ```
+   * It should now work correctly, alongside:
+
+     ```
+     http://127.0.0.1:5678/
+     ```
+
+---
+
+## Previous Setup vs New Fix
+
+**Previous Setup:**
+
+```yaml
+environment:
+  - N8N_EDITOR_BASE_URL=http://localhost:5678
+  - N8N_WEBHOOK_URL=http://localhost:5678/
+```
+
+**Problem:** `localhost` URL does not resolve correctly.
+
+**New Fix:**
+
+* Ensure `localhost` resolves in `hosts` file.
+* Restart PC to refresh network configuration.
+* Now `localhost` works, and all integrations (including Google APIs) function properly.
+
+---
+
+## Why This Matters
+
+Many integrations require that the **authorization URL exactly matches** what is configured in the API console. If `localhost` is not properly resolving:
+
+* OAuth flows will fail.
+* API requests may be rejected.
+
+With this fix, users can reliably use `localhost` in their environment without switching to `127.0.0.1`.
+
+---
+
+## TL;DR
+
+* Issue: `http://localhost:5678/` not working, only `127.0.0.1` works.
+* Cause: Hosts file or DNS resolution problem on Windows.
+* Solution: Edit `hosts` file → ensure `127.0.0.1 localhost` → restart PC.
+
+---
+
+
+
+
