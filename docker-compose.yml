@@ -1,7 +1,7 @@
 services:
   n8n:
-    image: n8nio/n8n:latest 
-    container_name: n8n-vscode
+    build: .
+    container_name: n8n-puppeteer
     restart: always
     ports:
       - "5678:5678"
@@ -18,14 +18,20 @@ services:
       - EXECUTIONS_DATA_SAVE_ON_ERROR=all
       - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none
       - N8N_METRICS=true
-    # Timezone settings for Bangladesh
+      - N8N_FORMDATA_FILE_SIZE_MAX=1024
+      - N8N_PAYLOAD_SIZE_MAX=256
       - TZ=Asia/Dhaka
       - GENERIC_TIMEZONE=Asia/Dhaka
+      - PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+      - PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+      - PUPPETEER_CACHE_DIR=/home/node/.cache/puppeteer
+      - PUPPETEER_ARGS=--no-sandbox,--disable-setuid-sandbox
     volumes:
       - n8n_storage:/home/node/.n8n
+      - n8n_binaries:/home/node/.n8n/binary_data
       - ./shared-data:/shared
       - /mnt/data:/mnt/data
 
 volumes:
   n8n_storage:
-    driver: local
+  n8n_binaries:
