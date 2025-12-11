@@ -1,0 +1,51 @@
+FROM n8nio/n8n:latest
+
+# Switch to root to install dependencies
+USER root
+
+# Install Python3, pip, curl, yt-dlp, nano, bash, and Chrome dependencies
+RUN apk add --no-cache \
+    python3 \
+    py3-pip \
+    curl \
+    yt-dlp \
+    nano \
+    bash \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    udev \
+    dbus \
+    dumb-init \
+    libx11 \
+    libxcomposite \
+    libxrandr \
+    libxdamage \
+    libxfixes \
+    libxi \
+    libxext \
+    libxtst \
+    libxrender \
+    alsa-lib \
+    cups-libs
+
+# Set Puppeteer environment variables
+ENV PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser"
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_CACHE_DIR="/home/node/.cache/puppeteer"
+
+# Switch back to node user
+USER node
+
+# Install pipx for Python packages
+RUN python3 -m pip install --user --break-system-packages pipx
+
+# Add pipx to PATH
+ENV PATH="/home/node/.local/bin:$PATH"
+
+# Optional: pre-install Puppeteer node (so n8n sees it)
+RUN cd /home/node && npm install n8n-nodes-puppeteer
+
